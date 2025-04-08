@@ -1,0 +1,20 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+
+<div class='register_header' >
+    <p class="search_titles">Add new feats</p>
+</div>
+
+<form action="{% url 'register_feats' %}" method="post">
+    {% csrf_token%}
+ 
+    {%bootstrap_form form%}
+    
+    
+    <button name="submit">Add</button>
+</form>
+
+
+{% endblock %}

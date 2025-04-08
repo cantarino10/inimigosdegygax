@@ -1,0 +1,556 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+  <style>
+
+      @media screen and (max-width:768px) {
+      .container{
+        max-width: 600px;
+        max-height: 2500px;
+        min-width: 500px;
+        height: fit-content;
+    }
+      #Builder_Content{
+        transform: scale(0.45);
+        transform-origin: top left;
+        width: min-content;
+    }
+      }
+      .container{
+        width: fit-content;
+      }
+  </style>
+  
+  <div class="print_div" style="height: 3rem;width: 50%;display: inline-block;">
+    <button id="generate-pdf">Print</button>  
+  </div>
+  <div class="content" >
+    <div class="sc_header">
+      <div class="sc_header_line" >
+            <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Name : </div ><div class="sc_reference_show">{{char.name}}</div></div>
+            <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Level : </div><div class="sc_reference_show">{{char.level}}{%if char.Adjustment_level%}
+              ({{char.Adjustment_level}})
+              {%endif%}
+            </div></div>        
+            <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Player : </div><div class="sc_reference_show">{%if user.is_authenticated%}
+                                                  {{user.username}}
+                                                {%else%}
+                                                <span></span>  
+                                                {%endif%}</div>
+            </div>
+          <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Skin : </div><div class="sc_reference_show">{{char.skin}}</div></div>                                                  
+          <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Hair : </div><div class="sc_reference_show">{{char.hair}}</div></div>      
+          
+     </div>                   
+
+     <div class="sc_header_line">  
+      <div style="display: inline-flex;margin-bottom: 2rem;">
+        
+        <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Class : </div><div class="sc_reference_show"><a href="{{char.classe.link}}" style="color: blue;font-weight: 800;" target="_blank">{{char.classe.Class}}</a></div></div>
+          <div class="sc_header_items"> <div class="sc_reference_fields sc_hd">Race : </div><a href="{{char.link}}" target="_blank" class="sc_reference_show">{{char.race}}</a></div>
+        <div class="sc_header_items"><div  class="sc_reference_fields sc_hd">Alignment : </div><div class="sc_reference_show">{{char.alignment}}</div></div>
+        <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Gender : </div><div class="sc_reference_show">{{char.gender}}</div></div>
+     </div>
+     <div>
+      
+     </div>
+
+     </div>          
+    </div>
+    <div class="sc_main">
+     <div class="sc_body">
+        
+        <div class="sc_body_upper">
+          <div class="bd_atributes">
+            
+            {%for atribute,mod,atr in stats%}
+            <div style="display: flex;">
+              <div style="margin-right: 0.5rem;"><p class="sc_center_items sc_reference_fields" style="min-height: 3rem; min-width: 4rem;text-align: center;">{{atr}}</p></div>
+              <p class="sc_atrbute_element">{{atribute}}</p>
+              <p class="sc_mod_element">{{mod}}</p>
+            </div>              
+            {%endfor%}
+            <p class="sc_reference_fields" style="margin-bottom: 3rem;font-size: 1.5rem;">Total : {{totalatributes}}</p>
+          </div>
+          <div class="sc_center sc_field" style="background-color: white;margin-left: 1rem;">
+            <p class="sc_center_items "> <span class="sc_reference_fields">HP:</span> {{char.pv}}</p>
+            <p class="sc_center_items"> <span class="sc_reference_fields">AC:</span> {{char.ca}},Flat foot {{char.flat}},Touch {{char.touch_ca}} </p>
+            <p class="sc_center_items"><span class="sc_reference_fields">Initiative:</span>  {{char.ini}}</p>
+            <p class="sc_center_items"><span class="sc_reference_fields">BBA :</span>  {{char.bba}}</p>
+            <p class="sc_center_items"><span class="sc_reference_fields">Base Speed :</span>  {{char.speed}}ft</p>
+
+            
+
+          </div>  
+          
+      </div>
+    
+          <div class="sc_body_center">
+            <div class="sc_field_save">
+              <div class="sc_header_items" style="border:none;background-color: rgba(255, 255, 255, 0);">
+                 <div class="sc_reference_fields sc_hd" >Fortitude : </div>
+                 
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.fort}}</div>
+                 <p style="margin-bottom: 5px;">Total</p></div>
+                 <span style="font-size: 2rem;margin-left: 0.5rem;">=</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.fort_base}}</div>
+                 <p style="margin-bottom: 5px;">Base</p></div>
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.con_mod}}</div>
+                 <p style="margin-bottom: 5px;">Modify</p></div>
+
+                 {%if char.extra_save%}
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.extra_save}}</div>
+                 <p style="margin-bottom: 5px;">Extra</p></div>
+                 {%endif%}
+                </div>
+
+
+              <div class="sc_header_items" style="border:none;background-color: rgba(255, 255, 255, 0);"> 
+                <div class="sc_reference_fields sc_hd">Reflexes : </div>                
+                <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.ref}}</div>
+                 <p style="margin-bottom: 5px;">Total</p></div>
+                 <span style="font-size: 2rem;margin-left: 0.5rem;">=</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.ref_base}}</div>
+                 <p style="margin-bottom: 5px;">Base</p></div>
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.dex_mod}}</div>
+                 <p style="margin-bottom: 5px;">Modify</p></div>
+
+                 {%if char.extra_save%}
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.extra_save}}</div>
+                 <p style="margin-bottom: 5px;">Extra</p></div>
+                 {%endif%}
+              </div>
+              <div class="sc_header_items" style="border:none;background-color: rgba(255, 255, 255, 0);"> 
+                <div class="sc_reference_fields sc_hd"style="min-width: 6.3rem;">Will : </div>
+                <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.will}}</div>
+                 <p style="margin-bottom: 5px;">Total</p></div>
+                 <span style="font-size: 2rem;margin-left: 0.5rem;">=</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.will_base}}</div>
+                 <p style="margin-bottom: 5px;">Base</p></div>
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.wis_mod}}</div>
+                 <p style="margin-bottom: 5px;">Modify</p></div>
+
+                 {%if char.extra_save%}
+                 <span style="font-size: 2rem;margin-left: 1rem;">+</span>
+                 <div class='sc_save_div'><div class="sc_reference_show sc_save" style="margin-left: 0.2rem;font-size: 1.3rem;">{{char.extra_save}}</div>
+                 <p style="margin-bottom: 5px;">Extra</p></div>
+                 {%endif%}
+              </div>
+              
+              
+         
+            </div>
+            {%for weapon,damage in weapons%}
+            <div class="sc_field">
+             
+              <table class="table table-hover table-borderless" style="margin: 0; min-width: 35rem;">
+                <thead >
+                  <tr class="table_header">
+                    <th class="sc_table_head" scope="col" style="font-size: 1.4rem;">Weapon</th>
+                    <th class="sc_table_head"  scope="col">Bonus</th>
+                    <th class="sc_table_head"  scope="col" >Damage</th>
+                    <th class="sc_table_head" scope="col">Critical</th>             
+
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr class="result_table">
+                    <td class="sc_skill_object " style="background-color: white;" ><div class="numbers" >{{weapon.name}} {%if weapon.magic%}
+                      {%if weapon.magic != 'MW'%}
+                      &nbsp+{{weapon.magic}}
+                      {%else%}
+                     (Masterwork)
+
+                      {%endif%}
+                      {%endif%}
+                    </div></td>
+                    <td class="sc_skill_object " style="background-color: white;" ><div class="numbers">{{weapon.bba}}</div></td>
+                    <td class="sc_skill_object " style="background-color: white;" ><div class="numbers"> {%if char.race.Size == 'Medium'%}
+                      {{weapon.damage_medium}}
+                    {%else%}  
+                      {{weapon.damage_small}}
+                    {%endif%}  
+                    + {{damage}} </div></td>
+                    <td class="sc_skill_object " style="background-color: white;" ><div class="numbers">{{weapon.critical}}</div></td>
+                  </tr>            
+                </tbody>      
+              
+              </table>  
+              <table class="table table-hover table-borderless" style="margin: 0; min-width: 35rem;">
+                <thead >
+                  <tr class="table_header">
+                    <th class="sc_table_head2" scope="col">Reach</th>
+                    <th class="sc_table_head2"  scope="col">Weight</th>
+                    <th class="sc_table_head2"  scope="col" >Type</th>
+                    <th class="sc_table_head2" scope="col">Magic properties</th>             
+
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr class="result_table">
+                    <td class="sc_skill_object sc_table_low" style="background-color: white;" ><div>{{weapon.reach}}ft</div></td>
+                    <td class="sc_skill_object sc_table_low" style="background-color: white;" ><div class="numbers">{{weapon.weight}}lb</div></td>
+                    <td class="sc_skill_object sc_table_low" style="background-color: white;" ><div class="numbers"> </div>{{weapon.type}}</td>
+                    <td class="sc_skill_object sc_table_low" style="background-color: white;" ><div class="numbers">  <p>
+                      {%if weapon.fixed_property%}
+                      <a href="{%url 'enhancement' weapon.fixed_property%}" target="blank">{{weapon.fixed_property}}</a>(Fixed)/
+                      {%endif%}
+                      {%if weapon.properties%}
+                    
+                      {%for property in weapon.properties%}
+                      <a href="{%url 'enhancement' property %}" target="_blank">{{property}}</a>/
+                      {%endfor%}
+                      </p>
+                      {%endif%}
+                     </div></td>
+                  </tr>            
+                </tbody>      
+              
+              </table>  
+              
+              </div> 
+              {%endfor%}
+              {%if char.armor%}
+              <div class="sc_field">
+                <table class="table table-hover table-borderless" style="margin: 0;min-width: 35rem;">
+                  <thead>
+                    <tr class="table_header">
+                      <th class="sc_table_head" scope="col">Armor</th>
+                      <th class="sc_table_head" scope="col">Bonus CA</th>                   
+                      <th class="sc_table_head" scope="col">Max Dex</th>
+                      <th class="sc_table_head" scope="col">Penalty</th>                  
+                      <th class="sc_table_head" scope="col">Category</th>
+                      <th class="sc_table_head" scope="col">Weight</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="sc_skill_object " style="background-color: white;" scope="col" >{{char.armor.name}} {%if char.armor.magic%}
+                        {%if char.armor.magic != 'MW'%}
+                        <span>&nbsp+{{char.armor.magic}}</span>
+                        
+                        {%else%}
+                        <span>(Masterwork)</span>
+                        {%endif%}
+                        {%endif%}</td>
+                      <td class="sc_skill_object " style="background-color: white;" scope="col">{{char.armor.ca}}</td>                  
+                      <td class="sc_skill_object " style="background-color: white;"  scope="col">{{char.armor.maxdex}}</td>                    
+                      <td class="sc_skill_object " style="background-color: white;"  scope="col">{{char.armor.penalty}}</td>           
+                      <td class="sc_skill_object " style="background-color: white;"  scope="col">{{char.armor.category}}</td>
+                      <td class="sc_skill_object " style="background-color: white;"  scope="col">{{char.armor.weight}} lb</td>
+                            </tr>
+  
+                  </tbody>
+  
+                </table>
+                {%if char.armor.properties %}
+                <div class="sc_armor_property" style="min-width: 35rem;">
+                  <p style="margin: 0;height: 50%;background-color: black;color: white;text-align: center;">Magic Properties</p>
+                  <p style="margin: 0;min-height: 50%;padding: 0.5rem; background-color: white;">
+                    {%for property in char.armor.properties%}
+                    <a href="{%url 'enhancement' property %}" target="_blank">{{property}}</a>/
+                   
+                    {%endfor%}
+                   
+
+                  </p>  
+                </div>
+                {%endif%}
+                
+
+              </div>
+              {%endif%}
+              {%if char.shield%}
+              <div class="sc_field">
+              <table class="table table-hover table-borderless" style="margin: 0;min-width: 35rem;">
+                <thead>
+                  <tr class="table_header">
+                    <th class="sc_table_head" scope="col">Shield</th>
+                    <th class="sc_table_head" scope="col">Bonus CA</th>                   
+                    <th class="sc_table_head" scope="col">Max Dex</th>
+                    <th class="sc_table_head" scope="col">Penalty</th>
+                    <th class="sc_table_head" scope="col">Weight</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="sc_skill_object " style="background-color: white;"   scope="col" >{{char.shield.name}} {%if char.shield.magic%}
+                      {%if char.shield.magic != 'MW'%}
+                      <span>&nbsp+{{char.shield.magic}}</span>
+                      {%else%}
+                      <span>(Masterwork)</span>
+                      {%endif%}
+                      {%endif%}</td></td>
+                    <td class="sc_skill_object " style="background-color: white;" scope="col">{{char.shield.ca}}</td>
+                    {%if char.shield.max != 100%}
+                    <td class="sc_skill_object "  style="background-color: white;"  scope="col">{{char.shield.maxdex}}</td>
+                    {%else%}
+                    <td class="sc_skill_object "  style="background-color: white;"  scope="col">-</td>
+                    {%endif%}
+                    <td class="sc_skill_object "  style="background-color: white;"  scope="col">{{char.shield.penalty}}</td>
+                    <td class="sc_skill_object "  style="background-color: white;"  scope="col">{{char.shield.weight}} lb</td>
+                          </tr>
+
+                </tbody>
+
+              </table>
+              {%if char.shield.properties %}
+                <div class="sc_armor_property">
+                  <p style="margin: 0;height: 50%;background-color: black;color: white;text-align: center;">Magic Properties</p>
+                  <p style="margin: 0;min-height: 50%;padding: 0.5rem; background-color: white;">
+                    {%for property in char.shield.properties%}
+                    <a href="{%url 'enhancement' property %}" target="_blank">{{property}}</a>/
+                   
+                    {%endfor%}
+                   
+
+                  </p>  
+                </div>
+                {%endif%}
+              </div>
+              {%endif%}
+
+              
+            
+            
+
+          </div>
+        </div> 
+     <div class="sc_skills">
+      <div style="    display: flex;justify-content: center;background-color: #000000;color: white; border-color: white;border-bottom: 2px solid white"><p style="margin-bottom:0.2rem ;">Skill Points : {{char.totalskill}}</p></div>
+      <div style="max-height: 70rem;overflow-y: scroll;">
+      <table class="table table-hover table-borderless" style="margin: 0;border: solid 2px black;background-color: white;">
+        <thead>
+          <tr class="table_header">
+            <th class="sc_table_head" scope="col"></th>
+            <th class="sc_table_head"  scope="col">Skill Name</th>
+            <th class="sc_table_head"  scope="col" >Total</th>
+            <th class="sc_table_head" scope="col">Grad</th>
+            <th class="sc_table_head"  scope="col">Mod</th>
+            <th class="sc_table_head"  scope="col">Pen</th>
+            <th class="sc_table_head"  scope="col">Sin/<br>Rac</th>
+          </tr>
+        </thead>
+        <div>
+          <div>
+            <tbody>
+              {%for skill,objects in char.skills.items%}
+              <tr class="result_table">
+                {%if objects.trained%}
+                <td style="color: black;background-color: black;"></td>
+                {%else%}
+                <td class="sc_skill_object " style="border-left: 2px solid black;"></td>
+                {%endif%}
+                {%if objects.inclasse%}
+                <td class="sc_skill_object " style="font-weight: 800;border-left: solid 2px black;">{{skill}} ({{objects.atribute}})</td>
+                {%else%}
+                <td class="sc_skill_object  "style="font-weight: 400;border-left: solid 2px black;" >{{skill}} ({{objects.atribute}})</td>
+                {%endif%}
+                <td class="sc_skill_object " style="background-color: #91909093;"><div class="numbers">{{objects.total}}</div></td>
+                <td class="sc_skill_object "><div class="numbers">{{objects.graduation}}</div></td>
+                <td class="sc_skill_object "><div class="numbers">{{objects.modificator}}</div></td>
+                <td class="sc_skill_object "><div class="numbers">{{objects.amorpenalty}}</div></td>
+                <td class="sc_skill_object "><div class="numbers">{{objects.sinergies}}</div></td>
+      
+
+              </tr>
+              {%endfor%}
+            </tbody>
+         </div>
+        
+       
+      </table >
+    </div>
+      <div style="display: inline-flex;margin: 1rem 0 0;"   >
+        <div style="width: 1rem;height: 1rem;background-color: black;margin-bottom: 5px"></div>
+        <p style="margin-bottom: 0;font-size: 18px;margin-left: 0.2rem;">Trained only skills</p>
+      </div>
+      <div>
+        <p style="margin-bottom: 0.2rem;font-size: 18px;">Highlited skills are in-class skills</p>
+      </div>
+      <div></div>
+
+     </div>   
+    </div>  
+   
+
+
+
+  </div>
+  <div class="content" id="cb_back">
+       
+    <div class="sc_foot">
+
+      
+      <div class="sc_backpack" style="max-width: 50%;width: max-content;" >
+        <div style="margin-bottom: 1rem;">
+        <h3 class="sc_title_div">Backpack</h3>  
+          <div class="sc_backpack_item">
+          
+            {%for item in char.gear%}    
+            <p class="sc_comom_div">       
+            {{item}}        
+          </p>   
+            {%endfor%}</p>
+          </div>
+         </div>     
+          <div class="sc_header_items"><div class="sc_reference_fields sc_hd">Gold : </div ><div class="sc_reference_show">{{char.gold}}</div></div>
+          <div class="sc_header_items"><div style="min-width: fit-content;" class="sc_reference_fields sc_hd">Weight : </div ><div class="sc_reference_show">{{char.weight}} lb ({{char.carrying}})</div></div>
+   
+           </div>   
+
+          </tbody>
+        </table>
+        <div style="margin-right: 1rem;">
+        {%if char.items%}
+        <table class="table table-hover table-borderless" style="margin-bottom: 2rem;border-bottom: solid;background-color: white;height: 1px;">
+          <thead>
+            <tr class="table_header">
+              <th class="sc_table_head" scope="col" style=" border: none;border-right: solid;"><h3 class="sc_title_div">Magic Item</h3> </th>
+              <th class="sc_table_head"  scope="col" style=" border: none;">Price</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {%for item in char.items%}            
+            <tr  class="result_table">
+           
+              <td class="sc_skill_object " style="background-color: white;border-left: solid;padding: 0;" ><div class="numbers" ><a href="{{item.link}}">{{item.text}}</a></div></td>
+              <td class="sc_skill_object " style="background-color: white;padding: 0;" ><div class="numbers">{{item.price}} gp</div></td>
+           
+            </tr>  
+            {%endfor%}
+              
+
+          </tbody>
+        </table>
+        {%endif%}
+        <div class="sc_languages" style="margin-bottom: 1rem;">
+          <h3 class="sc_title_div" style="height: 2rem; ">Languages</h3> 
+          <div class="sc_language_items">
+          {%for language in char.languages%}
+          <p class="sc_comon_div sc_language_p">{{language}}</p>
+          {%endfor%}
+          </div>  
+
+         </div>
+         <div class="sc_back_abilities sc_field" style="min-width: 20rem;margin:0 0 2rem 0 ;">
+          <table class="table table-hover table-borderless" style="margin: 0;">
+            <thead>
+              <tr class="table_header">
+                <th class="sc_table_head" scope="col" style=" border: none;border-right: solid;"><h3 class="sc_title_div" style="height: 2rem; ">Classe Abilities</h3></th>
+                <th class="sc_table_head"  scope="col" style=" border: none;">Level</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              {%for i,level in abilities%}
+              <tr  class="result_table">
+              {%if i != '—' and i and i != '-' %}
+                <td class="sc_skill_object " style="background-color: white;" ><div class="numbers" >{{i}}</div></td>
+                <td class="sc_skill_object " style="background-color: white;" ><div class="numbers">{{level}}</div></td>
+                {%endif%} 
+              </tr>  
+              {%endfor%}
+                
+
+            </tbody>
+          </table>
+        </div> 
+      </div>
+      <div class="sc_center_abilities ">            
+        
+        <div class="sc_field">       
+          <table class="table table-hover table-borderless" style="margin: 0;min-width: 25rem;">
+            <thead>
+              <tr class="table_header">
+                <th class="sc_table_head" scope="col" style="border: none;"><h3 class="sc_title_div" style="height: 2rem;">Feats</h3></th>             
+
+              </tr>
+            </thead>
+            <tbody>
+          {%for feat in char.feats%}
+          <tr  class="result_table">             
+              <td class="sc_skill_object " style="background-color: white;" ><a href="{%url 'feat' feat.id%}" class="numbers" target="_blank">{{feat}}</a></td>                
+            </tr>  
+            {%endfor%}                
+
+          </tbody>
+        </table>
+          
+        </div> 
+          
+        
+    </div>
+         </div>    
+  
+
+     
+    <div class="sc_back">
+      
+       {%if char.spells %}
+          <h3 class="sc_title_div">Spells</h3>
+          <div style="background-color: white;">
+            {% for level,spells in char.spells.items%}
+                  {%if spells%}
+                  <div class="sc_header_items" style="min-width: 100%;margin: 0;"><div class="sc_reference_fields sc_hd">{{level}}</div>
+                  {%for spell in spells%}
+                  <a href="{% url 'spell' spell.id %}" target="_blank" style="white-space: nowrap;"> {{spell}} ,</a>
+                
+                  {%endfor%}
+                </div>
+                  {%endif%}
+                {%endfor%}
+          
+       </div>
+       {%if char.insuficiente%}      
+          <h4 style="margin-top: 0.53rem;">* This Char doesnt have suficient <span>{{char.spell_key}}</span> to cast spells of this level</h4>
+          {%endif%}
+       {%endif%}
+     </div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('generate-pdf').addEventListener('click', function() {
+  // Passo 1: Obter o conteúdo da div "Builder_Content"
+  var conteudo = document.getElementById('Builder_Content').innerHTML;
+
+  // Passo 2: Criar uma nova janela para impressão
+  var win = window.open('', '', 'width=800,height=600');
+
+  // Passo 3: Adicionar o cabeçalho HTML e o link para o CSS externo
+  win.document.write('<html><head>');
+  win.document.write('<title>Impressão de Conteúdo</title>');
+  
+  // Adicionar o CSS externo à nova janela (ajuste o caminho conforme necessário)
+  win.document.write('<link rel="stylesheet" type="text/css" href="{% static "css/style.css"%}">'); // Seu arquivo CSS
+
+  win.document.write('</head><body>');
+  
+  // Passo 4: Inserir o conteúdo da div "Builder_Content" na nova janela
+  win.document.write(conteudo);
+  win.document.write('<style>.sc_skill_object { border: 1px solid black !important; }</style>');
+  win.document.write("<style> #Builder_Content{max-width:720px;}</style>")
+  win.document.write('<style>@page { size: A3; margin: 20mm; }</style>');
+  win.document.write('<style>.sc_reference_fields{background-color:black; }</style>');
+  win.document.write('<style>.sc_reference_fields{background-color:black !important; color:white !important;}</style>');
+  win.document.write('<style>#generate-pdf{display:none;}</style>');
+  win.document.write('<style>@media print { body { -webkit-print-color-adjust: exact; color-adjust: exact; } }</style>'); // Forçar a impressão de cores de fundo
+  // Passo 5: Finalizar e imprimir
+  win.document.write('</body></html>');
+  
+  // Dar um tempo para a página carregar o conteúdo antes de imprimir
+  win.document.close();
+  win.print();
+});
+ </script>
+  
+{% endblock %}

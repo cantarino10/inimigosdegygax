@@ -1,0 +1,26 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<div class='register_header' >
+    <p class="search_titles">Add new classes</p>
+</div>
+
+<form action="{% url 'register_classes' %}" method="post">
+    {% csrf_token%}
+ 
+    {%bootstrap_form form%}
+    <div style="display: flex;flex-direction: column;
+    align-items: flex-start;">
+      <span class="form-label">Class Type :</span><select name="classtype" id="form-control">Class Type : 
+        <option value="Base" selected>Base</option>
+        <option value="Prestige">Prestige</option>
+        </select> 
+        <br>
+        <button name="submit">Add</button>
+  
+    </div>  
+</form>
+
+
+{% endblock %}

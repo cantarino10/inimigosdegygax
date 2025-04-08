@@ -1,0 +1,59 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<h2>Dice Roller</h2>
+<div class="dice_show">
+<form action="{%url 'roll_dice'%}" method="post" class="dice_form">
+  
+ 
+  {% csrf_token%}  
+
+  {%for value,dice,i in choices%}  
+    <div style="display: flex;">
+      <input name="number_dices" type="number" class="number_dice" id="number_dice{{i}}" value="{{value}}" max="100" min="0">
+      
+      <select name="Dice" id="dice{{i}}" class="dice_selector" value="dice">
+        <option value="d4">d4</option>
+        <option value="d6">d6</option>
+        <option value="d8">d8</option>
+        <option value="d10">d10</option>
+        <option value="d12">d12</option>
+        <option value="d20">d20</option>
+        <option value="d100">d100</option>
+      </select>
+      <script>
+        document.getElementById("dice{{i}}").value = '{{dice}}'; 
+      </script>
+    </div>  
+  {%endfor%}  
+  <button type="submit" class="search_button">Roll</button>
+
+</form>
+<div>
+  {%if results%} 
+  <h3 class="dice_rolled No_results">Result</h3>
+ 
+  {%for i,h,d in results%}
+
+    <div class="dice_results">
+      
+      <div class="dice_rolled_title" >{{d}} = {{h}}</div>
+      <div  class="dice_rolled" >
+      <p style="margin :0;">
+        {%for j in i%}
+          <span style="border: 2px solid black;margin: 0 0 0 2px;">{{j}}&#160</span>
+        {%endfor%}
+      
+           
+    </p>
+  </div>
+    </div>
+
+  {%endfor%}
+  <div class="dice_total">Total = {{sum}}</div>   
+{%endif%}
+</div>
+</div>
+
+{% endblock %}

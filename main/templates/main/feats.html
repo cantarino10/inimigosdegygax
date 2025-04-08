@@ -1,0 +1,68 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+  <center>
+    {%if user.is_staff%}
+   <p>
+      <a href="{%url 'register_feats'%}">Add Feats</a>
+   </p> 
+   {%endif%}
+    <div class="feat search">
+      <p class="search_titles">Feats</p>
+      <form action="{% url 'feats'%}" method = 'post'>
+        {%csrf_token%}
+        <div class="div_search_elements">
+            <p class="search_elements">Feat Name:<input type="text" aria-label="Search" name='featname' class="input_rect"></p>
+            <p class="search_elements">Sourcebook:<input type="text" aria-label="Search" name="feathandbook" class="input_rect"></p>
+            <p class="search_elements">Pre requisite:<input type="text" aria-label="Search" name="featrequisite" class="input_rect"></p>
+            <p class="search_elements">Required For:<input type="text" aria-label="Search" name="featrequired" class="input_rect"></p>
+            <p class="search_elements">Feat Category:<input type="text" aria-label="Search" name="feattype" class="input_rect"></p>                
+         </div> 
+            <div class ="div_search_elements">
+               <p class="search_elements">Edition :<select name="featversion" id="featversion">
+                  <option value="" selected>All</option>
+                  <option value="3.0">3.0</option>
+                  <option value="3.5">3.5</option>
+               </select></p>
+            
+       
+         
+            <button type="submit">Search</button>
+          </div>  
+    </div>   
+  {%if pag %}
+     <h1 class="page_header"> Results : </h1><br><br>
+     {%include "main/pagination.html"%}
+     <div class="table_div">
+      <table class="table table-hover table-borderless">
+        <thead>
+          <tr class="table_header"> 
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>        
+            <th scope="col">Short Description</th>
+            <th scope="col">Rulebook</th>           
+        
+          </tr>
+        </thead>
+        <tbody>
+          {% for results in pag.object_list %}
+          <tr >           
+           
+              <td> <a href="{% url 'feat' results.id%}" target="_blank" class="result_objects">{{results.name}}</a></td>
+              <td>{{results.type}}</td>
+              <td class="feat_shortdescript">{{results.shortdescript}}</td>
+              <td><a href="{% url 'handbook' results.handbook%}" target="_blank" class="result_objects">{{results.handbook}}</a></td>                            
+           
+          </tr>
+          {%endfor%}            
+        </tbody>
+      </table>
+     </div>    
+  {%include "main/pagination.html"%}   
+  {%else%}
+      <h1 class="No_results">No Results to show</h1>
+
+  </center>
+  {%endif%}
+
+{% endblock %}

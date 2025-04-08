@@ -1,0 +1,60 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+  <center>
+    {%if user.is_staff%}
+      <p>
+          <a href="{%url 'register_classes'%}">Add classes</a>
+      </p> 
+    {% endif %}
+    <div class="search search_classes">
+      <p class="search_titles">Classes</p>
+      <form action="{%url 'classes'%}" method = 'post'>
+        {%csrf_token%}
+        <div class="div_search_elements">
+            <p class="search_elements">Name:<input type="text" aria-label="Search" name='searchclasses' class="input_rect"></p>
+            <p class="search_elements">Category :
+              <select name="classtype" id="prest">
+               <option value="">All</option>
+               <option value="base">Base</option>
+               <option value="prestige">Prestige</option>
+            </select></p>        
+         </div>   
+         <div class="search_button">
+            <button type="submit">Search</button>
+         </div>   
+      </form>
+   </div>
+
+  {%if pag %} 
+     <h1 class="page_header"> Results  </h1><br><br>
+     {%include "main/pagination.html"%}
+     <div class="table_div">
+      <table class="table table-hover table-borderless">
+        <thead>
+          <tr class="table_header">   
+            <th scope="col">Class</th>
+            <th scope="col">Handbook</th>
+            <th scope="col">Category</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for results in pag.object_list %}
+          <tr>          
+              <td> <a href={{results.link}} target="_blank" class="result_objects">{{results.text}}</a></td>
+              <td><a href="{% url 'handbook' results.handbook%}" target="_blank" class="result_objects">{{results.handbook}}</a></td>               
+              <td>{{results.category}}</td>
+              <td> <a href="{%url 'spells' results.text%}" class="result_objects">Spells</a></td>
+           </tr>
+          {%endfor%}           
+        </tbody>
+      </table>
+     </div>      
+  {%include "main/pagination.html"%}   
+  {%else%}
+      <h1 class="No_results">No Results to show</h1>
+  </center>
+  {%endif%}
+
+{% endblock %}

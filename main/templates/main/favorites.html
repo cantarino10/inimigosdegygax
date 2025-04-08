@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+{% block content %}
+  <h1 style="display: flex;justify-content:center;margin: 0 0 5%;font-weight: 800;">Favorites</h1>
+  <div class="favorite">
+    <div class="fav_block">
+        <h3 style="display:flex;justify-content:center;margin: 0;font-weight: 800;">Spells</h3>
+        <div class="fav_divs">
+        {%for spell in fav_spells%}
+        <div class="fav_text">
+          <a href="{%url 'spell' spell.id%}" target="_blank"  >{{spell.name}} :</a><span>&emsp13;({{spell.level}}), {{spell.handbook}}</span> 
+          <a href="{% url 'favorite_spell' spell.id%}" method="post">Remove</a>
+          
+        </div>    
+        {%endfor%}
+      </div>  
+    </div>
+    <div class="fav_block">
+
+     <h3 style="display:flex;justify-content:center;margin: 0;font-weight: 800;">Feats</h3>
+        <div class="fav_divs"> 
+        {%for feat in fav_feats%}
+        <div class="fav_text">
+          <a href="{%url 'feat' feat.id%}" target="_blank">{{feat.name}} :  </a> <span>{{feat.shortdescript}}</span>
+          <a href="{% url 'favorite_feat' feat.id%}" method="post">Remove</a>
+        </div> 
+        {%endfor%}
+      </div>  
+      </div> 
+ 
+  </div>  
+
+{% endblock %}

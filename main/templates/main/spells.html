@@ -1,0 +1,83 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+  <center>
+    {%if user.is_staff%}
+   <p>
+      <a href="{%url 'register_spells'%}">Add Spells</a>
+   </p> 
+   {%endif%}
+      
+    <div class="spell search">
+      <p class="search_titles">Spells</p>
+      <form action="{% url 'spells'%}" method = 'post'>
+         {%csrf_token%}
+         <div class="div_search_elements">
+          
+               <p class="search_elements">Spell Name :<input type="text" aria-label="Search" name="spellname" class="input_rect"></p>
+               <p class="search_elements">Class :<input type="text" aria-label="Search" name="spellclass" class="input_rect"></p>
+               <p class="search_elements">Sourcebook:<input type="text" aria-label="Search" name="spellhandbook" class="input_rect"></p>
+               <p class="search_elements">School  :<input type="text" aria-label="Search" name="spellschool" class="input_rect"></p>
+         </div>   
+         <div class="div_search_elements">
+               <p class="search_elements">Level :<input type="number" aria-label="Search" min="0" max="9" name="spelllevel" class="input_rect"></p>
+               <p class="search_elements">Edition :<select name="spellversion" id="spellversion">
+                  <option value="" selected>All</option>
+                  <option value="3.0">3.0</option>
+                  <option value="3.5">3.5</option>
+               </select></p>
+               
+               <p class="search_elements"> Spell Resistance : <select name="spellresistance" id="spellresistance">
+               <option value="" selected>All</option>
+               <option value="y">Yes</option>
+               <option value="N">No</option>
+               
+               </select></p>
+               
+                  <button class='search_button'type="submit">Search</button>
+            </div>
+          
+      </form>
+   </div>
+  {{request.GET.spellclass}}
+  {%if pag %}
+     <h1 class="page_header"> Results </h1><br><br>
+     {%include "main/pagination.html"%}
+    <div class="table_div">
+      <table class="table table-hover table-borderless" style="margin: 0;">
+        <thead>
+          <tr class="table_header">  
+            <th scope="col">Name</th>
+            <th scope="col">Class</th>
+            <th scope="col">Description</th>
+            <th scope="col">School</th>
+            <th scope="col">Range</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Spell Resistance</th>  
+            <th scope="col">Rulebook</th>       
+          </tr>
+        </thead>
+        <tbody >
+          {% for results in pag.object_list %}
+          <tr class="result_table" >                    
+              <td>  <a href="{% url 'spell' results.id%}" target="_blank" method="post" class="result_objects">{{results.name}}</a></td>
+              <td><a href="{%url 'class_filter' results.level%}" class="result_objects">{{results.level}}</a></td>
+              <td class='spell_descript'>{{results.descript}}</td>
+              <td>{{results.school}}</td>
+              <td>{{results.range}}</td>
+              <td>{{results.duration}}</td>
+              <td>{{results.spellresistance}}</td>
+              <td><a href="{% url 'handbook' results.handbook%}" target="_blank" class="result_objects">{{results.handbook}}</a></td>              
+          </tr>
+          {%endfor%}            
+        </tbody>
+      </table>
+     </div> 
+     
+  {%include "main/pagination.html"%}   
+  {%else%}
+      <h1 class="No_results">No Results to show</h1>
+  </center>
+  {%endif%}
+
+{% endblock %}

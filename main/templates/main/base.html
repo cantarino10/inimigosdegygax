@@ -1,0 +1,153 @@
+{%load static%}
+{% load bootstrap5 %}
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content ="Dnd Search Tool">
+  <meta name="keywords" content="DnD 3.5, D&D 3.5, player handbook, dungeons and dragons, rpg">
+  <meta name ="author" content="Vinicius Cantarino"> 
+  <link rel="stylesheet" href="{% static 'css/style.css'%}">
+  <link rel="shortcut icon" href="{% static 'css/logo_gygax.png'%}" type="image/x-icon">
+  <link href='https://fonts.googleapis.com/css?family=MedievalSharp' rel='stylesheet'>
+  <title>The Enemys of Gygax</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src ="{% static 'css/custom.js'%}"></script>
+
+
+  {%bootstrap_css%}
+  {%bootstrap_javascript%}
+ </head>
+ 
+ <body class="body">
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong navbar-static-top" style="max-width: 100vw;position:sticky; top:0;background-color: rgba(0,0,0,.2);min-width: 100vw; ">
+        <div class="container-fluid" style="flex-wrap: nowrap;padding-left: 0;">
+          <div class="dropdown2">           
+            <button>▼</button>         
+                <div class="dropdown2_content">
+                  <div class="dropdown_user" >                    
+                    {%if not user.is_authenticated %}
+                      <div style="display: flex;">
+                        <a class="icon navbar-brand"  href="{%url 'login' %}" >Login</a> 
+                        <a  class="icon navbar-brand"  href="{%url 'register'%}" >Sign up</a>
+                      </div> 
+                    {%else%}
+                      <button style="display: flex;flex-direction: row;"><p style="font-size: 2rem;line-break: unset;">Hello, {{user.username}}▼</p></button>
+                      <div class="dropdown_user_content">
+                            {%if user.is_staff%}
+                            <a class="icon navbar-brand"  href="{%url 'admin:index'%}"> Admin</a>
+                            {%endif%}
+                            <a href="{%url 'favorites'%}" class="icon navbar-brand" >Favorites</a> 
+                            <a class="icon navbar-brand"  href="{%url 'password_change'%}">Password Change</a>
+                            <a class="icon navbar-brand"  href="{%url 'logout'%}">Logout</a>                           
+                      </div>  
+                     {%endif%}
+                  </div>  
+                  <div style="width: -webkit-fill-available;">
+                      <div class="dropdown_headers">
+                        <a href="{% url 'char_builder'%}" class="icon navbar-brand"  style="padding: 0;margin: 0;"><h4>Char Builder</h4></a>
+                      </div>
+                      <div class="dropdown_headers dropdown_search">
+                        <h4>Search ▼</h4>
+                        <div class="dropdown_topic drop_search">
+                          <a href="{% url 'handbooks'%}" class="icon navbar-brand" >Handbooks</a>     
+                          <a href="{% url 'races'%}" class="icon navbar-brand" >Races</a>      
+                          <a href="{% url 'classes'%}" class="icon navbar-brand" >Classes</a>  
+                          <a href="{% url 'feats'%}" class="icon navbar-brand" >Feats </a>               
+                          <a href="{% url 'spells'%}"  class="icon navbar-brand" >Spells </a>     
+                          <a href="{% url 'items'%}" class="icon navbar-brand" >Items </a>  
+                          <a href="{% url 'enhancements'%}" class="icon navbar-brand">Enhancements</a>
+                        </div>  
+                      </div>
+                      <div class="dropdown_headers dropdown_tools">
+                        <h4>Tools ▼</h4>
+                        <div class="dropdown_topic drop_tools">
+                          <a href="{%url 'roll_dice'%}" class="icon navbar-brand" >Dices Roller</a>     
+                          <a href="{%url 'stats_builder' %}" class="icon navbar-brand" >Stats Roller</a>
+                          <a href="{% url 'encounter'%}" class="dropdown_search"  >XP Calculator</a>                  
+                          <a href="{% url 'item_randomize'%}" class="dropdown_search" >Random Item</a>
+                        </div>  
+                      </div>                
+                    </div>                    
+                </div>                   
+            </div>
+            <div>
+              <a class="navbar-brand" href="{%url 'index' %}" id="navbar_text">
+                <img src="{% static 'css/logo_gygax.png'%}" alt="" id="logo"> The Enemys of Gygax</a> 
+            </div>       
+            <div class="finder_icons" >
+              <div class="dropdown icon_finder"> <button style="display: flex;flex-direction: column;max-height: 110%;"><img src="{% static 'css/search_icon.png'%}" alt="Finder" class="icon_">Search </button>
+                  <div class="dropdown dropdown_content" id="search_tool">
+                    <a href="{% url 'handbooks'%}" class="dropdown_search" style="display: flex;"><img src="{%static 'css/bookicon.svg'%}" alt="Handbook"  class="finder_img">Handbooks</a>
+                    <a href="{% url 'races'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/raceicon.png'%}" alt="Races"  class="finder_img">Races</a>
+                    <a href="{% url 'classes'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/classicon.png'%}" alt="Classes"  class="finder_img">Classes</a>
+                    <a href="{% url 'feats'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/featsicon.png'%}" alt="Classes"  class="finder_img">Feats</a>
+                    <a href="{% url 'spells'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/spellicon.png'%}" alt="spells"  class="finder_img">Spells</a>
+                    <a href="{% url 'items'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/itemicon.png'%}" alt="items"  class="finder_img">Items</a>
+                    <a href="{% url 'enhancements'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/enhancemen_icon.png'%}" alt="items"  class="finder_img">Enhancements</a>
+                  </div>               
+              </div>
+              <div class="dropdown icon_finder"> <button style="display: flex;flex-direction: column;max-height: 110%;"><img src="{% static 'css/toolicon.png'%}" alt="Tools" class="icon_">Tools </button>
+                <div class="dropdown dropdown_content" id="search_tool">
+                  <a href="{% url 'roll_dice'%}" class="dropdown_search" style="display: flex;"><img src="{%static 'css/reroll2_img.png'%}" alt="Handbook"  class="finder_img">Dice Roller</a>
+                  <a href="{% url 'stats_builder'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/humanbody.png'%}" alt="Races"  class="finder_img">Roll Atributes</a>
+                  <a href="{% url 'encounter'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/calc_icon.png'%}" alt="Classes"  class="finder_img">XP Calculator</a>                  
+                  <a href="{% url 'item_randomize'%}" class="dropdown_search" style="display: flex;" ><img src="{%static 'css/random_item_icon.png'%}" alt="spells"  class="finder_img">Random Item</a>
+                </div>             
+              </div>
+              <div >
+                <a href="{% url 'char_builder'%}" class="dropdown_search header_cb" style="align-items: center;"><img src="{%static 'css/gearicon.png'%}" alt="Handbook"  class="icon_"><p style="font-size: 1.8rem;font-family: inherit;margin-bottom:0 ;color:white ;">Char Builder</p></a>
+              </div>           
+             </div>     
+              <div class="log_div">   
+                {%if not user.is_authenticated %}
+                  <div style="display: flex;">
+                    <a class="nav-link" href="{%url 'login' %}" style="font-size: 1.8rem;margin-right: 2rem;">Login</a>
+                    <a  class="nav-link" href="{%url 'register'%}" style="font-size: 1.8rem;margin-right: 10rem;">Sign up</a>
+                  </div> 
+                {%else%}                
+                  <div class="dropdown">
+                      <button>Hello, {{user.username}}▼</button>
+                      <div class="dropdown_content">    
+                          {%if user.is_staff%}
+                          <a class="" href="{%url 'admin:index'%}"> Admin</a>
+                          {%endif%}
+                          <a href="{%url 'favorites'%}" class="">Favorites</a> 
+                          <a class="" href="{%url 'password_change'%}">Password Change</a>
+                          <a class="" href="{%url 'logout'%}">Logout</a>
+                      </div>                      
+                    </div>              
+                {%endif%}            
+              </div>    
+         </div>
+        </nav>  
+    </div>   
+  <ul>
+   {% for message in messages %}
+      <li class="{{ message.tags }}">
+          {% if 'safe' in message.tags %}
+            <P style="color: white; position:sticky; top:0;" > {{ message|safe }}</P>
+          {% else %}
+              <p style="color :white; position:sticky; top:0;">{{ message }}</p>
+          {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="container" >
+    <div class="page-header">
+        {%block header%}{%endblock header%}
+    </div>
+      
+    <div class="main_content" id="Builder_Content">
+        {%block content%}{% endblock content%} 
+    </div>    
+  </div>
+   
+ </body>
+ </html>
+  
+
+

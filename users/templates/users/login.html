@@ -1,0 +1,30 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{%block header%}
+  <h1>Login</h1><br>
+{%endblock header%}  
+
+{%block content%}
+
+
+  {%if error%}
+    <p class="login_error">Login and password doesn't match. Try Again</p>
+
+  {%endif%}
+  <div class="login_div">
+
+  <form action="{%url 'login'%}" method="post" class="form" style="min-width: 100%;">
+    {%csrf_token%}
+    {%bootstrap_form form%}
+    
+    {%buttons%}
+      <button name="submit" class="bt btn-primary" style="background-color: rgb(240, 238, 231);color: black; border-color :black;">Login</button>
+    {%endbuttons%}  
+    <small class="text-muted">
+      <a href="{%url 'password_reset'%}">Forgot your password ?</a> <span>,</span><a href="{% url 'register'%}"> New Here ?</a>
+    </small>
+  </form>
+
+</div>  
+{%endblock%}

@@ -1,0 +1,42 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<div class='register_header' >
+    <p class="search_titles">Add new races</p>
+</div>
+
+<form action="{% url 'register_races' %}" method="post" ">
+    {% csrf_token%}
+    <div style="display: flex;justify-content: center;">
+        <div class="race_atribute_class">
+            {%for i,j in zip%}
+                <div style="display: flex;">
+                    <p style="min-width: 50px;">{{i}}</p>
+                    <input type="number" max="20" name="atr{{j}}" class="cb_stats" value="0"></div>
+            {%endfor%}
+        </div>    
+        <div class="race_atribute_class">
+            <h3 style="display: flex; justify-content: center;">Skills adjustment</h3>
+            {%for i in range%}
+            <div> Skill :<select name="skills{{i}}" >   
+                <option value="" selected></option>    
+                {%for sk in skills%}            
+                    <option value="{{sk.skills}}" name="skill_name{{i}}">{{sk.skills}}</option>
+                {%endfor%}    
+            </select>   
+            
+            <input type="number" max="10" min="-10" name="skill_input{{i}}">    
+        </div>
+            {%endfor%}
+        </div>  
+    </div>  
+
+    {%bootstrap_form form%}
+    
+    
+    <button name="submit">Add</button>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,73 @@
+
+{%extends "main/base.html"%}
+{%load bootstrap5%}
+{% load humanize %}
+
+{% block content %}
+
+  <style>
+    p{
+      font-weight: 1000;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+
+ <div class="eh_head">
+  <h1 class="page_title" >{{enhance.name}}
+    {%if enhance.sinergy%}
+     <span>(Sinergy)</span>
+    {%endif%}
+  </h1>
+  <p>[{%if '+' in enhance.price%}
+      Enhancement
+      {% else%}
+      Fixed
+      {%endif%}]
+  </p>
+  <p> ( <a href="{% url 'handbook' enhance.book%}" target="_blank"> {{enhance.book}} </a> 
+    {%if enhance.page%}
+    , p.{{enhance.page}}
+    {%endif%} )</p>
+ </div>
+
+ <div class="en_body"> 
+  <p>Price: <span class="eh_item"> {%if '+' in enhance.price%}
+    {{enhance.price}}
+    {%else%}
+    +{{enhance.price|intcomma}} gp
+    {%endif%}
+  </span>
+
+  </p>
+  <p>Slot: <span class="eh_item">{{enhance.slot}}</span></p>
+  {%if enhance.activation%} 
+  <p>Activation: <span class="eh_item">{{enhance.activation}}</span></p>
+  {%endif%}
+  <p>Caster Level: <span class="eh_item">{{enhance.caster_level}}</span></p>
+  {%if enhance.aura%}
+  <p>Aura:<span class="eh_item">{{enhance.aura}}</span></p>
+  {%endif%}
+  {%if enhance.sinergy%}
+  <p>Sinergy: <a href="{% url 'enhancement' enhance.sinergy%}" target="_blank"><span class="eh_item">{{enhance.sinergy}}</span></a> </p>
+  {%endif%}
+  {%if enhance.requirements%}
+  
+  <p>Requirements: {%for i in require%}
+    <a href="{%url 'define' i%}" target="_blank"><span class="eh_item">{{i}},</span></a>
+    {%endfor%}
+  </p>
+  {%endif%}
+  <br>
+  <br>
+  <div class="eh_descript">
+      <p>{{enhance.description}}</p>
+
+      {%if enhance.cost_create%}
+      <br>
+      <br>
+      <p>Cost to Create: <span class="eh_item">{{enhance.cost_create}}</span></p>
+      {%endif%}
+  </div>
+ </div>  
+
+ {% endblock %}

@@ -1,0 +1,70 @@
+{%extends "main/base.html"%}
+{% block content %}
+
+  <div class="feat_div">
+    
+    <h3 class="page_title">{{feat.name}} <span>,{{feat.version}}</span></h3>
+    <h1><a href="{% url 'favorite_feat' feat.id%}" method="post">
+      {%if isfavorite != 'True'%}
+        To favourites
+      {%else%}
+       Remove favorites
+      {%endif%}
+      </a></h1>
+   
+    {%if book%}
+    
+      
+      <a href="{{book.link}}" style="color:black;"  target="_blank">{{feat.handbook}}</a>
+    {%else%}  
+      <p>{{feat.handbook}}
+    {%endif%}
+    {%if feat.page != ' '%}  
+      <span>, pg.{{feat.page}}</span>
+    {%endif%}</p>
+    <p>{{feat.shortdescript}}</p>
+    <p>[{{feat.type}}]</p>
+    <h4 class="headers">Pre requisites</h4>
+    {%for a,b in requisites %}
+      {%if b != None%}  
+        <a href="{% url 'call_feat' b%}">{{b}},</a>
+      {%else%}  
+        <span>{{a}},</span>
+      {%endif%}  
+    {%endfor%}
+    <br><br>  
+    {%if feat.required != ' '%}
+    <h4 class="headers">Required for</h4>
+    {%for require in feat.required%}
+      <a href="{%url 'call_feat' require%}">{{require}},</a>
+    {%endfor%}
+    <br><br><br>
+    {%endif%}
+ 
+    <h4 class="headers">Benefit</h4>
+    <br><p class="text_descript">{{feat.description}}</p>
+
+    
+    {%if feat.special != ' '%}
+      <h4 class="headers">Special</h4>
+      <br>
+      {{feat.special}}
+    {%endif%}  
+  </div>
+  <p>Also Appears in :</p>
+
+  <a href="{{feat.link}}" style="color:black;">dndtools</a>
+  <br>
+  {%for other in otherfeats%}
+    {%if other.handbook != feat.handbook %}
+    
+ 
+     <a href="{% url 'feat' other.id%}" style="color:black;">{{other.handbook}}</a>
+     <br>
+    {%endif%}
+ {%endfor%}
+
+
+
+
+{% endblock %}

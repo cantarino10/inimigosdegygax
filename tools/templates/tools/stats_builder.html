@@ -1,0 +1,35 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<style>
+  .container{
+    width: fit-content;
+  }
+</style>
+  <div style="display: flex;align-items: center;flex-direction: column;">
+    <h3>Atributes Roller</h3>
+    <form action="{%url 'stats_builder'%}" method="post" class="sr_form">
+      {%csrf_token%}
+      {%for stats,mod,atr in atributes%}
+        <div style="display: flex;">
+          <input type="number" class="cb_stats" value="{{stats}}" min="0" max="99" name="value_{{atr}}">
+          <input type="number" value="{{mod}}" class="cb_stats" disabled>
+         </div> 
+      {%endfor%}
+      <p>Total : {{total}}</p>
+      
+      <div style="display: flex;">
+        
+  
+        <a href="{% url 'stats_builder'%}"  class="cb_roll_a" >
+          <img src="{%static 'css/reroll2_img.png'%}" alt="items"  class="finder_img" style="height:5rem"></a>
+
+      </div> 
+   
+    </form>
+   
+  </div>  
+
+
+{% endblock %}

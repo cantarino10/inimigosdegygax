@@ -1,0 +1,72 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/style_tools.css'%}">
+  <h1 class="xp_title">XP Calculator Tool</h1>
+  {%if message%}
+  <p class="No_results"> {{message}} </p>
+  {%endif%}
+  <div class="xp_main">
+    
+        
+      <form action="{%url 'encounter'%}" method="post" class="cb_form" >
+        {%csrf_token%}
+        <div class="xp_input_crs">  
+          <div style="display: flex;flex-direction:row;">
+            <div class="xp_div xp_encounter_div">
+                <h4>Encounter</h4>
+                <div class="xp_header">
+                  <p>Nº</p><p>LVL</p>
+                </div>
+                
+                {%for lv,num in monsters%}
+                <div>
+                  <input type="number" class="xp_field_cr" value="{{num}}" max="99" min="0" name="mnumber" maxlength="2">
+                  <input type="number" class="xp_field_cr" value="{{lv}}" max="20" min="0" name="mlvl" maxlength="2">
+                  
+
+                </div>           
+                {%endfor%}
+              
+              </div>
+            <div class="xp_div xp_player_div">
+                <h4>Players</h4>
+                <div class="xp_header">
+                 <p>Nº</p><p>LVL</p>
+                </div>
+                
+                {%for lv,num in players%}
+                <div>
+                  <input type="number" class="xp_field_cr" value="{{num}}" max="20" min="0" name="pnumber" maxlength="2">
+                  <input type="number" class="xp_field_cr" value="{{lv}}" max="20" min="0" name="plvl" maxlength="2">
+                  
+             
+                </div>
+                {%endfor%}
+            </div>    
+          </div>
+        </div>
+        <div class="xp_buttons">
+            <button type="submit" value="calc" name="button">Calculate</button>
+            <button type="submit" value="reset" name="button">Reset</button>
+        </div>
+      </form>
+     
+    {%if pl%}
+    <div class="xp_extras_div">
+      <h4>Levels, Dificultys, XP and treasure</h4>
+      <div>Party level : <p>{{pl}}</p></div>
+      <div>Encounter level : <p>{{el}}</p></div>
+      <div>Difficulty : <p>{{difficult}}</p></div>
+      <div>Total XP : <p>{{xp}}</p></div>
+      <div>Each member xp : <p>{{each_xp}}</p></div>
+      <div>Recomended treasure wealth : <p>{{treasure}} gp</p></div>
+    </div>
+    {%endif%}
+    <div class="xp_input_players">
+
+    </div>
+  </div>
+
+{% endblock %}

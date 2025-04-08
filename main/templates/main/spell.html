@@ -1,0 +1,51 @@
+
+{%extends "main/base.html"%}
+{% block content %}
+
+ <div class="spell_div" > 
+   <div>
+      <h1 class="page_title">{{spell.name}}<span>,{{spell.Edition}}</span></h3> 
+      <a href="{{book.link}}">{{spell.handbook}}</a>  
+   </div>
+   <h3><a href="{% url 'favorite_spell' spell.id%}" method="post">
+    {%if isfavorite != 'True'%}
+      To favourites
+    {%else%}
+     Remove favorites
+    {%endif%}
+    </a></h3>
+ 
+ 
+
+ 
+
+ <div class="spell_headers"></div>
+  
+ <h5>{{spell.category}}</h5>
+   <span>Level : </span>
+   {%for a,b in classes%}
+   <a href="{%url 'spells' a%}" >{{a}}</a><span>,{{b}}</span>  
+   {%endfor%} 
+  <p class="spell_p">Components : {{spell.components}}</p>
+  <p class="spell_p">Casting Time : {{spell.casting_time}}</p>
+  <p class="spell_p">Range : {{spell.range}}</p>
+  <p class="spell_p">Duration : {{spell.duration}}</p>
+  <p class="spell_p">Area of Effect : {{spell.area}}</p>
+  <p class="spell_p">Spell Resistance : {{spell.spellresistance}}</p>
+   {%if spell.save%}
+      <p class="spell_p">Saving Throw : {{spell.save}}</p>
+   {%endif%}   
+ </div>
+
+   <h4 class="headers" style="margin-top: 50px;">Description</h4>
+   <span style="font-weight: 600;">{{spell.descript|linebreaks}}</span>
+ 
+ {%for other in otherspells%}
+    {%if other.handbook != spell.handbook %}
+     <a href="{% url 'spell' other.id%}">{{other.handbook}}</a>
+     <br>
+    {%endif%}
+ {%endfor%}
+</div> 
+
+ {% endblock %}

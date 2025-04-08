@@ -1,0 +1,114 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% load humanize %}
+
+{% block content %}
+
+{%if user.is_staff%}
+<style>
+  .main_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>
+<p>
+   <a href="{%url 'register_races'%}">Add Enhancements</a>
+</p> 
+{%endif%}
+<div class="search search_races">
+ <p class="search_titles">Magic Enhancements</p>
+ <form action="{% url 'enhancements'%}" method = 'post'>
+   {%csrf_token%}
+   <div class="div_search_elements"> 
+         <p class="search_elements">Name :<input type="text" aria-label="Search" name="name" class="input_rect"></p>       
+         <p class="search_elements">Equipment<select name="equip" id="vers" class="select_elements">
+            <option value="" selected>All</option>
+            <option value="Weapon" >Weapon</option>
+            <option value="Armor">Armor</option>
+            <option value="Shield">Shield</option>
+         </select></p>
+
+         
+       
+
+       <p class="search_elements">Handbook<select name="book" id="enhan_book"  class="select_elements">
+        <option value="" selected>All</option>
+        {%for book in handbooks%}
+        <option value="{{book}}" >{{book}}</option>
+        {%endfor%}</select>
+
+      </div>  
+      <div class="box_select">
+
+        <div class="check_label">
+          <input type="radio" id="by_price" name="property_select" value="price" checked required> 
+          <label for="by_price" class="search_elements">By price</label>
+        </div> 
+
+        <div class=" search_range " id="enhan_price"><p class=" search_range"><input type="number" aria-label="Search" name="value_min" class="input_rect price" value="0"> to <input type="number" aria-label="Search" name="value_max" class="input_rect price" value="9999999"> </p></div> 
+      </div>   
+      <div class="box_select" style="margin-bottom: 1.2rem;">
+        <div class="check_label">
+            <input type="radio" id="by_bonus" name="property_select" value="bonus">
+            <label for="by_bonus" class="search_elements">By bonus</label>
+          </div>    
+       <select name="bonus" id="vers" style="width:7rem;height: 2rem;text-align: center;font-size: 1.2rem;">
+          <option value="" selected>All</option>
+          <option value="+1" >+1</option>
+          <option value="+2">+2</option>
+          <option value="+3">+3</option>
+          <option value="+4">+4</option>
+          <option value="+5">+5</option>
+       </select>
+      </div>
+      <div class="search_button">
+        <button type="submit" >Search</button>       
+      </div>    
+ </form>
+</div>
+{%if pag %}
+  <h1 class="page_header"> Results : </h1><br><br>
+  {%include "main/pagination.html"%}
+  <div class="table_div">
+   <table class="table table-hover table-borderless">
+     <thead>
+       <tr class="table_header">   
+          
+         <th scope="col">Enhancement</th>
+         <th scope="col">Short Descript</th>
+         <th scope="col">Price</th>        
+         <th scope="col">Equipment</th>
+         <th scope="col">Handbook</th>      
+       </tr>
+     </thead>
+     <tbody>
+       {% for results in pag.object_list %}
+       <tr>           
+        
+           <td> <a href="{%url 'enhancement' results.name%}" target="_blank" class="result_objects">{{results.name}}</a></td>
+           <td><p class="spell_descript">{{results.description}}</p></td>    
+           {%if not '+' in results.price%}
+            <td> <p class="result_objects">{{results.price|intcomma}} gp</p></td>
+           {%else%}
+            <td> <p class="result_objects">{{results.price}}</p></td>
+            {%endif%}
+           <td><p class="result_objects">{{results.slot}}</p></td>        
+           <td><a href="{%url 'handbook' results.book%}" target="_blank" class="result_objects">{{results.book}}</a></td> 
+        
+       </tr>
+       {%endfor%}            
+     </tbody>
+   </table>
+  </div> 
+{%include "main/pagination.html"%}   
+{%else%}
+   <h1 class="No_results"> No Results to show</h1>
+</center>
+{%endif%}
+
+
+
+{% endblock %}
+

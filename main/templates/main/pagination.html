@@ -1,0 +1,30 @@
+<div class="pagination">
+      <div>
+        <span class="step-links">
+            {% if pag.has_previous %}
+                <a href="?page=1" class="page_select" >&laquo; first</a>
+                <a href="?page={{ pag.previous_page_number }}" class="page_select">previous</a>
+            {% endif %}
+            <span class="current" >
+              Page {{ pag.number }} of {{ pag.paginator.num_pages }}.      
+            </span>
+            
+            {% if pag.has_next %}
+                <a href="?page={{ pag.next_page_number }}" class="page_select">next</a>
+       
+                <a href="?page={{ pag.paginator.num_pages }}"class="page_select">last &raquo;</a>         
+            {% endif %}
+            
+          </span>
+      </div>    
+      <div>
+        <form  class="goto_page_form">
+          {%csrf_token%}
+          {{form.as_p}}
+          
+          Go to Page<input type="number" aria-label="Search" name="page" class="goto_page" value="{{pag.number}}">  
+           <button name="submit">Go</button>
+        </form>
+      </div>
+  
+</div>

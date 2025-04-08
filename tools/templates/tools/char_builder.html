@@ -1,0 +1,91 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<style>
+  .container{
+    width: fit-content;
+  }
+</style>
+<div style="display: flex;align-items: center;flex-direction: column;">
+  <h1 style="font-weight: 800;">Char Builder</h1>
+ 
+  <form action="{%url 'char_builder'%}" method="post" class="cb_form">
+    {%csrf_token%}
+    <div style="padding-top: 1.5rem;">
+    {%for i,j in atributes%}
+    
+      <div style="display: flex;">
+        *<input type="radio" name="prefered_stats" id="i" style="margin-right: 0.5rem;" value="{{i}}">
+        <p style="min-width: 3rem;margin: 0;text-align: center;display: flex;align-items: center;">{{j}}</p><input type="number" class="cb_stats" value="{{stats}}" min="0" max="99" name="atribute{{i}}">
+      
+       </div> 
+    {%endfor%}
+       <div style="display: flex;">
+        *<input type="radio" name="prefered_stats" id="i" style="margin-right: 0.5rem;" value="" checked>
+        <p style="min-width: 3rem;margin: 0;text-align: center;display: flex;align-items: center;">Random</p>
+      </div> 
+  </div>
+  <div style="display: flex;flex-direction: column;">
+      Name** : <input type="text" name="name">
+     
+      Race : <select name ="Race">
+        <option value="None">Random</option>
+        {%for race in races%}
+        <option value="{{race.Race}}">{{race.Race}}</option>
+        {%endfor%}
+        </select>
+      Class : <select name="classes" id="">
+        <option value="" selected>Random</option>
+        {%for j in classes%}
+        <option value="{{j.Class}}">{{j.Class}}</option>
+        {%endfor%}
+
+      </select>
+      Alignment : <select name="alignment" id="">
+        <option value="" selected>Random</option>
+        <option value="Lawful/Good" >Lawful/Good</option>
+        <option value="Lawful/Neutral" >Lawful/Neutral</option>
+        <option value="Lawful/Evil" >Lawful/Evil</option>
+        <option value="Neutral/Good">Neutral/Good</option>
+        <option value="True Neutral">True Neutral</option>
+        <option value="Neutral/Evil">Neutral/Evil</option>
+        <option value="Chaotic/Good">Chaotic/Good</option>
+        <option value="Chaotic/Neutral">Chaotic/Evil</option>
+        <option value="Chaotic/Evil">Chaotic/Evil</option>
+
+
+      </select>
+      Handbook : <select name="book" id="">
+        <option value="" selected>All</option>
+        {%for book in books%}
+        <option value="{{book}}">{{book}}</option>
+        {%endfor%}
+      </select>
+      
+      <button class='cb_search_button' type="submit" style="height: 45px;margin-top: 2rem;">Generate</button> 
+    </div>
+    <div style="margin-left: 1.2rem;">
+      <p style="margin-top: 20px;">Hair** : <input type="text" name="hair" id="">
+        
+      </p>
+      <p style="margin-top: 20px;">Skin** : <input type="text" name="skin">
+       </p>
+      
+       Gender : <select name="gender" id="">
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+       </select>
+       <p style="margin-top: 20px;">Level** : <input type="number" name="level" class="cb_stats" max="20" min="1">  </p>
+       <p><input type="checkbox" name="adjust_lvl" style="transform: scale(1.5);"> Allow level adjustment</p>
+    </div>
+    </form>
+    
+    
+   
+<p>*Select preference to increase stats when reach every 4 levels <br>
+**If Any atribute be left empty it will be randomly generated <br>
+*** If you select one class, the book selection will be completely ignored </p>
+
+
+{% endblock %}

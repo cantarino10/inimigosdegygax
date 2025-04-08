@@ -1,0 +1,72 @@
+{%extends "main/base.html"%}
+{%load static%}
+{%load bootstrap5%}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style_tools.css'%}">
+<style>
+  .container{
+
+    width: fit-content;
+    border: solid 2px black;
+  }
+</style>
+<div>
+  <h4 class="page_header"> Item Randomizer</h4>
+  <div class="ri_main">
+   <form action="{% url 'item_randomize'%}" method="post" class="cb_form">
+       {%csrf_token%}
+        <div class="ri_category">
+          <h4>Search by category</h4>
+          <div>
+            <select name="item_category" id="" style="text-align: center;">
+              <option value="" selected>Any</option>
+              <option value="Minor">Minor</option>
+              <option value="Medium">Medium</option>
+              <option value="Major">Major</option>
+            </select>
+          </div>
+        </div>
+        <div class="ri_price">
+          <h4>Search by price*</h4>
+          <div>
+            <input type="number" name="min_value" min="0" value="0"> <p>to</p> <input type="number" name="max_value" value="99999999">
+
+          </div>
+        </div>
+        <div class="ri_button_div">
+          <button class="cb_search_button" type="submit">Random</button>
+        </div>
+        
+   </form>
+   {%if item%}
+    <div class="ri_result">
+      <a href="{{item.link}}" style="text-decoration: none;" target="_blank"><h3>{{item.text}}</h3></a>
+      <div class="ri_descript">
+        <div>Price : 
+          <p>{{item.price}}</p>
+        </div>
+        <div>Familiy : 
+          <p>{{item.family}}</p>
+
+        </div>
+        <div>Slot :
+          <p>{{item.slot}}</p>
+        </div>
+        <div>Handbook :
+          <a href="{{book.link}}" target="_blank">{{item.handbook}}</a>
+        </div>
+      </div>
+    </div>
+    {%endif%}
+    {%if message%}
+      <div style="display: flex;align-items: center;">
+        <h4 class="No_results"><strong>{{message}}</strong></h4>
+      </div>
+    {%endif%}
+    </div>
+  <p style="margin-top: 2rem;">*If you select a category, price will be ignored</p>
+</div>
+
+
+
+{% endblock %}

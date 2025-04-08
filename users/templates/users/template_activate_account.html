@@ -1,0 +1,7 @@
+{%autoescape off%}
+Hi {{user}}
+
+Please click on the link below and join us like another enemy of gygax!
+
+http://{{domain}}{% url 'activate' uidb64=uid token=token%}
+{%endautoescape%}

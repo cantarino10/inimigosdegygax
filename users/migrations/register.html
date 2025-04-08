@@ -1,0 +1,16 @@
+{%extends "main/base.html"%}
+{%block content%}
+
+
+
+
+    <form action="{%url 'register'%}" method="post">
+      {%csrf_token%}
+      {{form.as_p}}
+     
+      Email :<input name="mail" type="text">
+     
+      <button name="submit">Registrar</button>
+      
+    </form>
+{%endblock%}
